@@ -1,0 +1,26 @@
+services:
+  database:
+    image: "postgres:17.5-alpine"
+    ports:
+      - "5090:5432"
+    volumes:
+      - "database_data:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+  database-client-tool:
+    image: "dpage/pgadmin4:9.4.0"
+    ports:
+      - "8090:80"
+    volumes:
+      - "database_client_tool_data:/var/lib/pgadmin"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "dbuser@dbhost.data"
+      PGADMIN_DEFAULT_PASSWORD: "dbpass"
+    links:
+      - database
+    depends_on:
+      - database
+volumes:
+  database_data: {}
+  database_client_tool_data: {}
